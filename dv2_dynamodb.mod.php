@@ -11,7 +11,7 @@
     /**
      * The DynamoDB Addon OliveWeb Module
      */
-    class MOD_dv2_datavault2
+    class MOD_dv2_dynamodb
     {
         public function __construct()
         {
