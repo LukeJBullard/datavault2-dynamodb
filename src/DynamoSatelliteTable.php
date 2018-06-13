@@ -86,11 +86,12 @@
          * Retrieves a Satellite from the Table
          * @param String $a_hashDiff The Hash Diff of the Satellite to retrieve
          * @param String $a_hubHash The Hash of the Hub the Satellite is under (Optional- if omitted, will return the first Satellite with the hash diff)
-         * @return Satellite The Satellite retrieved from the Table
-         * @return Int DV2_ERROR If the Satellite was not found or could not be loaded
+         * @return Satellite|Int The Satellite retrieved from the Table or DV2_ERROR If the Satellite was not found or could not be loaded
          */
         public function getSatellite($a_hashDiff, $a_hubHash="")
         {
+            //the conditions of the query
+            //hash diff columns must EQual $a_hashDiff
             $keyConditions = array(
                 $this->m_hashDiffFieldName => array(
                     'AttributeValueList' => array(
@@ -100,6 +101,7 @@
                 )
             );
 
+            //if the hubhash is specified, add a condition that the hubhash column must equal $a_hubHash
             if ($a_hubHash != "")
             {
                 $keyConditions[$this->m_hubHashFieldName] = array(
@@ -110,6 +112,7 @@
                 );
             }
             
+            //perform the query, only retrieve 1 item
             $result = $this->m_dynamo->getIterator('Query',array(
                 'TableName' => $this->m_tableName,
                 'Limit' => 1,
@@ -157,6 +160,13 @@
                         break;
                     }
                 }
+
+                //if the fields are invalid, return error
+                if (empty($data) || $source == "" || $date == "" || $hubHash == "")
+                {
+                    return DV2_ERROR;
+                }
+                
                 return new Satellite(
                     $source,
                     $date,
