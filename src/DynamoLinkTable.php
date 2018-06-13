@@ -208,10 +208,17 @@
                         break;
                     }
                 }
+
+                //if the link is invalid, return error
+                if ($source == "" || $date == "" || empty($links))
+                {
+                    return DV2_ERROR;
+                }
+
                 return new Link(
                     $source,
-                    $data,
-                    $date
+                    $date,
+                    $links
                 );
             }
 
