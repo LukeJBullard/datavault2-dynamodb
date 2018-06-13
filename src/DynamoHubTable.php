@@ -120,6 +120,7 @@
             {
                 $data = "";
                 $loadDate = "";
+                $source = "";
 
                 foreach ($item as $fieldName => $field)
                 {
@@ -142,16 +143,23 @@
                         case $this->m_sourceFieldName:
                             foreach ($field as $key => $val)
                             {
-                                $sourceField = $val;
+                                $source = $val;
                                 break;
                             }
                             continue;
                     }
                 }
+
+                //if the info isn't pulled from the db, return error
+                if ($data == "" || $loadDate == "" || $source == "")
+                {
+                    return DV2_ERROR;
+                }
+
                 return new Hub(
                     $this,
                     $source,
-                    $date,
+                    $loadDate,
                     $data
                 );
             }
